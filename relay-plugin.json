@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "apiVersion": 1,
+  "apiVersion": 2,
   "id": "relay.agent-activity",
   "name": "Agent activity",
   "version": "0.1.0",
