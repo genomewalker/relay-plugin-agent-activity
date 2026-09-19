@@ -1,47 +1,61 @@
 # Relay Agent activity
 
-Inspect the selected pane’s existing agent, subagent and recent activity events.
+Read the agents, subagents and activity already captured for a Relay pane.
 
-## Status and compatibility
+![Agent activity in Relay with synthetic data](docs/images/preview.jpg)
 
-Experimental native-tool package. Requires the Relay build that implements
-the `tool` contribution and the matching `relayd plugin` helper. Older Relay
-builds reject this package safely. This is a data-only package: the implementation
-lives in [Relay](https://github.com/genomewalker/relay-terminal), not executable
-code downloaded from this repository. No install hooks or background polling.
+*Actual native Relay component captured September 19, 2026 in an isolated test window. Synthetic data only. Development preview—not a promise that these features are in the released app.*
 
-The native implementation is under development and has not yet passed installed-app
-acceptance. Do not mistake a manifest for a production-ready extension.
+## Status
 
-## Install and use
+This repository has an experimental API-2 manifest but **no tagged installable release yet**. Do not use `main` as a release tag.
 
-When a tagged release is available, open Relay Settings → Plugins, enter
-`genomewalker/relay-plugin-agent-activity` and its exact tag, review the digest and
-permissions, install disabled, then Enable. Select a terminal pane and open
-the puzzle-piece button in the workspace toolbar. Select this tool, verify the
-host/directory, and choose **Allow once & refresh**. Each refresh is explicit.
+Features and screenshots here describe the current Relay development implementation. A compatible app and matching helper are required; installed-app and release acceptance remain incomplete.
 
-Updates require another reviewed version and start disabled. Disable, Roll back
-and Uninstall are available in Settings. Safe mode suppresses all plugin tools.
+This is a **data-only package**. Its manifest selects operations implemented in [Relay](https://github.com/genomewalker/relay-terminal). It does not download executable plugin code, run install hooks or add background polling.
 
-## Limits
+## Features
 
-This is an on-demand snapshot of Relay’s existing event collection, not a new provider adapter. It does not invent missing events, send peer messages, or answer approvals.
+- Search by name, stable identity, thread or state.
+- Needs-input priority, followed by recent activity.
+- Expandable identities and timestamped updates.
+- Recent pane events, including peer messages when captured by Relay.
 
-Only the captured pane/host/directory is used; switching tabs does not retarget
-an in-flight request. Remote hosts need a matching helper installed through Relay's
-existing approved setup flow. Agent processes are never restarted by this plugin.
+## Install
 
-## Package verification
+Wait for a tagged release before installing this package.
 
-```sh
-python3 -m json.tool relay-plugin.json
-```
+1. Use a compatible Relay app and matching `relayd` on the target host.
+2. Open **Settings → Plugins**, enter `genomewalker/relay-plugin-agent-activity` and the exact released tag.
+3. Review the repository, digest and permissions. Install, then explicitly Enable.
+4. Select the intended terminal pane and click the puzzle-piece toolbar button.
 
-Runtime, path-containment, payload-integrity and permission tests live alongside
-the implementation in Relay. Publish `relay-plugin.json` as a release asset only
-after those tests and the corresponding installed-app acceptance checks pass.
+Updates require another review and start disabled. Disable, Roll back and Uninstall are available in Settings. Safe mode suppresses plugin tools. Existing release assets must not be overwritten.
 
-## License
+## Use
 
-No license has been selected yet. Public visibility does not grant a reuse license.
+Refresh, search locally, expand an agent and open Recent pane activity. Refresh explicitly for an updated snapshot.
+
+The panel captures its originating pane and connection; changing tabs does not retarget a request. File tools need a known working directory. Reopen the panel from the intended directory when necessary. Each read is explicit; active terminal workers and agents are not restarted.
+
+## Permissions and safety
+
+`agentMetadata` and `agentContent`: read retained information for the selected pane. No provider requests or peer messages are sent.
+
+Relay checks the enabled package and digest before running and before showing results. An incompatible helper produces an error, not a misleading empty result.
+
+## Limits and remaining work
+
+At most 100 agents, 20 updates per row and 30 recent pane events. This is a snapshot, not a new provider adapter. Missing events are not inferred. Approvals remain in the CLI. No approval actions, peer sending or guarantee of complete cross-session history.
+
+## Verification
+
+Tests cover 150 input agents, attention priority, duplicate names, stable IDs and filtering. Expanded rows and peer-activity display were manually checked with synthetic records; the screenshot is not evidence of a live provider integration.
+
+The latest combined development run reported 216 Swift tests (one optional network test skipped); the Go race suite passed. These checks do not substitute for installed-app, remote-error, accessibility or release acceptance of the exact versions you deploy.
+
+## Development and issues
+
+Validate the manifest with `python3 -m json.tool relay-plugin.json`. Native implementation and tests live in [Relay](https://github.com/genomewalker/relay-terminal), not this repository. Report runtime problems there with app/helper versions, reproduction steps and redacted diagnostics. Manifest and documentation issues belong here.
+
+No license has been selected for this package yet. Public visibility alone does not grant a reuse license.
